@@ -2,36 +2,35 @@
 	header("Content-Type: text/plain");
 	require_once('utils.php');
 	
-	$inputText = getQueryStringParameter('text');
+	$inputText = getQueryStringParameter('identifier');
 	
 	if ($inputText !== null && strlen($inputText) > 0)
 	{
-		echo removeExtraBlanks($inputText);
+		checkIndentifier($inputText);
 	}
 	else
 	{
 		echo 'Введены некорректные данные';
 	}
 	
-	function removeExtraBlanks(string $text): string
+	function checkIndentifier(string $identifier)
 	{
-		$formattedString = '';
-		$isBlankFound = true;
-		for ($i = 0; $i < strlen($text); $i++)
+		$hasErrors = false;
+		if (!isDigit($identifier[0]))
 		{
-			if ($text[$i] !== ' ')
+			for ($i = 0; $i < strlen($identifier); $i++)
 			{
-				$formattedString .= $text[$i];
-				$isBlankFound = false;
-			}
-			else
-			{
-				if ($isBlankFound == false)
+				if (!isAllowedSymbol($identifier[$i]))
 				{
-					$isBlankFound = true;
-					$formattedString .= $text[$i];
+					echo 'В идентификаторе не может содержаться ' . "'" . $identifier[$i] . "'.\n";
+					$hasErrors = true;
 				}
 			}
 		}
-		return $formattedString;
+		else
+		{
+			echo "Идентификатор не может начинаться с цифры.\n";
+			$hasErrors = true;
+		}
+		echo $hasErrors ? 'no' : 'yes';
 	}
