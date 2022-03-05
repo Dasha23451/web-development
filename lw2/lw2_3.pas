@@ -1,38 +1,37 @@
 PROGRAM HelloDear(INPUT, OUTPUT);
 USES
   DOS;
-   
 FUNCTION GetQueryStringParameter(Key: STRING): STRING;
 VAR
-  Query, Value: STRING;
+  Query, Value, a: STRING;
   KeyPos, I: INTEGER;
 BEGIN
   Value := '';
   Query := GetEnv('QUERY_STRING');
   KeyPos := POS(Key, Query) + Length(Key) + 1;
-  FOR I := KeyPos TO Length(Query)
-  DO
-    BEGIN
-      IF (Query[I] = '&')
-      THEN
-        BREAK;
-      Value := Value + Query[I];
-    END;
-  GetQueryStringParameter := Value
-VAR
-  Query, Name: STRING;
-  I: INTEGER;
-BEGIN 
-  WRITELN('Content-Type: text/plain');
-  WRITELN;
-  IF (Length(Query) > 0)
+  a := COPY(Query, KeyPos + 1, 1);
+  IF (Query  <> '') AND (a <> '')
   THEN
     BEGIN
-      FOR I := POS('=', Query) + 1 TO Length(Query)
+      WRITE('Hello dear, ');
+      FOR I := KeyPos TO Length(Query)
       DO
-        Name := Query[I];
-      WRITELN('Hello Dear, ', Name)
+        BEGIN
+          IF (Query[I] = '&')
+          THEN
+            BREAK;
+          Value := Value + Query[I];
+        END
     END
   ELSE
-    WRITELN('Hello Anonymous!')
-END. 
+    WRITELN('Hello Anonymous!');
+  GetQueryStringParameter := Value
+END;
+VAR
+  Query, b, Name: STRING;
+  I, a: INTEGER;
+BEGIN
+  WRITELN('Content-Type: text/plain');
+  WRITELN;
+  WRITELN(GetQueryStringParameter('name'))
+END.
